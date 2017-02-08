@@ -1,0 +1,39 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_menu"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/menu_btn_home"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/home"/>
+        <item
+            android:id="@+id/menu_btn_profile"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/profile"/>
+        <item
+            android:id="@+id/menu_btn_stuff"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/stuff"/>
+        <item
+            android:id="@+id/menu_btn_search"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/search"/>
+    </group>
+    <item android:title="@string/about">
+        <menu>
+            <group android:checkableBehavior="all">
+                <item
+                    android:id="@+id/menu_btn_about"
+                    android:icon="@drawable/ic_action_add"
+                    android:title="@string/about"/>
+                <item
+                    android:id="@+id/menu_btn_about2"
+                    android:icon="@drawable/ic_action_add"
+                    android:title="@string/action_log_out"/>
+            </group>
+        </menu>
+    </item>
+</menu>

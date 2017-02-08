@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">Share</string>
+
+    <!-- general -->
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="stuff">My Stuff</string>
+    <string name="about">About</string>
+    <string name="search">Search</string>
+
+    <!-- errors -->
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_no_internet">No internet connection &#8230;</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_log_out">Log out</string>
+
+
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <!-- menu -->
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_my_stuff">My Stuff</string>
+    <string name="drawer_open">Open menu</string>
+    <string name="drawer_close">Close menu</string>
+
+
+
+    <!-- TEMP, remove -->
+    <string-array name="drawer_menu_items">
+        <item name="home">Home</item>
+        <item name="profile">Profile</item>
+        <item name="stuff">My Stuff</item>
+        <item name="search">Find Stuff</item>
+        <item name="logout">Logout</item>
+    </string-array>
+
+    <string name="title_activity_login">Sign in</string>
+</resources>
