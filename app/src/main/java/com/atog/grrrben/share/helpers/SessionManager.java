@@ -14,7 +14,7 @@ public class SessionManager {
     /**
      * Number of seconds the cache is valid
      */
-    private static int cacheduration = 300;
+    private static int cacheduration = 3000;
 
     // Shared Preferences
     private SharedPreferences pref;
