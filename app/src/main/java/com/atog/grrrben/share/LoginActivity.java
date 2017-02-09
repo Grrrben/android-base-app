@@ -38,6 +38,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
 import com.atog.grrrben.share.helpers.SessionManager;
@@ -392,22 +393,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     try {
                         Boolean success = response.getBoolean("success");
-                        JSONObject user = response.getJSONObject("user");
+                        JSONObject userdata = response.getJSONObject("user");
 
                         if (success) {
                             // user successfully logged in
+                            User user = new User();
+
+                            user.username = userdata.getString("username");
+                            user.email = userdata.getString("email");
+                            user.uuid = userdata.getString("uuid");
+                            user.createdAt = userdata.getString("created_at");
+
                             // Create login session
-                            session.setLogin(true);
-
-                            // Now store the user in SQLite
-                            String name = user.getString("name");
-                            String email = user.getString("email");
-                            String uid = user.getString("uuid");
-                            String created_at = user.getString("created_at");
-
-                            // Inserting row in users table
-                            db.addUser(name, email, uid, created_at);
-
+                            session.setLogin(user);
                             // Launch main activity
                             startNextActivity();
                         } else {

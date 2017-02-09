@@ -6,8 +6,10 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
-import java.util.HashMap;
+import com.atog.grrrben.share.helpers.SessionManager;
 
 public class ProfileActivity extends BaseActivity {
 
@@ -15,6 +17,7 @@ public class ProfileActivity extends BaseActivity {
     private TextView txtEmail;
 
     private SQLiteHandler db;
+    private SessionManager session;
 
     private static final String TAG = "ProfileActivity";
 
@@ -35,16 +38,12 @@ public class ProfileActivity extends BaseActivity {
             }
         });
 
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
-
-        String email = user.get("email");
-
+        session = new SessionManager(this);
+        User user = session.getUser();
         // Displaying the user details on the screen
-        txtName.setText(user.get("username"));
+        txtName.setText(user.username);
+        txtEmail.setText(user.email);
         Log.d(TAG, txtName.toString());
-        txtEmail.setText(email);
     }
 
 }

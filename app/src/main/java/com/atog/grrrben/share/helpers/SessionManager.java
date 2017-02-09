@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import com.atog.grrrben.share.classes.User;
+
+import java.io.IOException;
+
 import static java.lang.System.currentTimeMillis;
 
 public class SessionManager {
@@ -25,10 +29,11 @@ public class SessionManager {
     // Shared pref mode
     public static int PRIVATE_MODE = 0;
 
-    // Shared preferences file name
+    // Shared preferences file username
     private static final String PREF_NAME = "AndrSessionLogin";
 
     private static final String KEY_DATE_LOGGED_IN = "date_logged_in";
+    private static final String KEY_USER = "user";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -36,16 +41,33 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void setLogin(boolean isLoggedIn) {
-        if (isLoggedIn) {
-            editor.putLong(KEY_DATE_LOGGED_IN, currentTimeMillis());
-        } else {
-            editor.putLong(KEY_DATE_LOGGED_IN, 0);
+    public void setLogin(User user) {
+        // first set a time
+        editor.putLong(KEY_DATE_LOGGED_IN, currentTimeMillis());
+        // and put the user in
+        try {
+            editor.putString(KEY_USER, ObjectSerializer.serialize(user));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // commit changes
         editor.commit();
-
         Log.d(TAG, "User login session modified!");
+    }
+
+    public User getUser() {
+        User user = null;
+        try {
+            String userString = pref.getString(KEY_USER, "");
+            user = (User) ObjectSerializer.deserialize(userString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public void logout () {
+        editor.putLong(KEY_DATE_LOGGED_IN, 0);
+        editor.commit();
     }
 
     public boolean isLoggedIn(){
