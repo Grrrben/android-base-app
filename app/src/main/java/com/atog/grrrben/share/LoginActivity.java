@@ -139,13 +139,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in.
-            startProfileActivity();
+            startNextActivity();
         }
     }
 
     /**
      * Check if there is an internet connection
-     * @return
+     * @return boolean
      */
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -326,7 +326,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         addEmailsToAutoComplete(emails);
     }
 
-    public void startProfileActivity() {
+    public void startNextActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
         finish();
@@ -385,7 +385,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
-//            showProgress(true);
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, AppConfig.URL_LOGIN, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -397,7 +396,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         if (success) {
                             // user successfully logged in
-                            showProgress(false);
                             // Create login session
                             session.setLogin(true);
 
@@ -411,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             db.addUser(name, email, uid, created_at);
 
                             // Launch main activity
-                            startProfileActivity();
+                            startNextActivity();
                         } else {
                             Snackbar.make(coordinatorLayout, "NOPE", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
