@@ -47,7 +47,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.left_drawer);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -56,22 +55,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
                     case R.id.menu_btn_home:
-
-                        gotToActivity("stuff");
-
+                        gotToActivity(new MyStuffActivity());
                         return true;
                     case R.id.menu_btn_profile:
+                        gotToActivity(new ProfileActivity());
+                        return true;
+                    case R.id.menu_btn_logout:
+                        gotToActivity(new LoginActivity());
+                        return true;
+                    case R.id.menu_btn_stuff:
+                        gotToActivity(new MyStuffActivity());
                         return true;
                     default:
 //                        return super.onOptionsItemSelected(item);
                 }
-
-
                 return true;
             }
         });
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -104,8 +104,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void gotToActivity(String activityName) {
-        Intent intent = new Intent(this, MyStuffActivity.class);
+    public void gotToActivity(AppCompatActivity activity) {
+        Intent intent = new Intent(this, activity.getClass());
         startActivity(intent);
         finish();
     }

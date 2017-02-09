@@ -30,7 +30,7 @@
                     android:icon="@drawable/ic_action_add"
                     android:title="@string/about"/>
                 <item
-                    android:id="@+id/menu_btn_about2"
+                    android:id="@+id/menu_btn_logout"
                     android:icon="@drawable/ic_action_add"
                     android:title="@string/action_log_out"/>
             </group>
