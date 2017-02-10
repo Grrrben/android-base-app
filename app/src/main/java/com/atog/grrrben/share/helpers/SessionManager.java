@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.atog.grrrben.share.classes.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONObject;
 
@@ -58,13 +59,17 @@ public class SessionManager {
     public User getUser() {
         User user = null;
 
-        if (isLoggedIn() == false) {
+        if (!isLoggedIn()) {
             return null;
         }
 
         String userString = pref.getString(KEY_USER, "");
-        user = gson.fromJson(userString, User.class);
-
+        try {
+            user = gson.fromJson(userString, User.class);
+        } catch (JsonSyntaxException e) {
+            Log.d(TAG, "User is null");
+            e.printStackTrace();
+        }
         return user;
     }
 
@@ -74,7 +79,6 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn(){
-
         long loggedInAt = pref.getLong(KEY_DATE_LOGGED_IN, 0);
         long nowInMs = currentTimeMillis();
 

@@ -1,5 +1,6 @@
 package com.atog.grrrben.share;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,14 @@ public class ProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_profile);
         super.onCreate(savedInstanceState);
+
+        session = new SessionManager(this);
+
+        if (!session.isLoggedIn()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         txtName = (TextView) findViewById(R.id.username);
         txtEmail = (TextView) findViewById(R.id.email);
