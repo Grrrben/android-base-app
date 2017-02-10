@@ -56,12 +56,18 @@ public class SessionManager {
 
     public User getUser() {
         User user = null;
+
+        if (isLoggedIn() == false) {
+            return null;
+        }
+
         try {
             String userString = pref.getString(KEY_USER, "");
             user = (User) ObjectSerializer.deserialize(userString);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return user;
     }
 

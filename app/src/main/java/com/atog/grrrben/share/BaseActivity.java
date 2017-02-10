@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.atog.grrrben.share.helpers.SessionManager;
+
 /**
  * Holds shared methods for the activity classes
  */
@@ -60,11 +62,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                     case R.id.menu_btn_profile:
                         gotToActivity(new ProfileActivity());
                         return true;
-                    case R.id.menu_btn_logout:
-                        gotToActivity(new LoginActivity());
-                        return true;
                     case R.id.menu_btn_stuff:
                         gotToActivity(new MyStuffActivity());
+                        return true;
+                    case R.id.menu_btn_logout:
+                        logout();
                         return true;
                     default:
 //                        return super.onOptionsItemSelected(item);
@@ -109,4 +111,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    public void logout() {
+        SessionManager session = new SessionManager(this);
+        session.logout();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
 }

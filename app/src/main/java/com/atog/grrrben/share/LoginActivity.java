@@ -399,7 +399,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             // user successfully logged in
                             User user = new User();
 
-                            user.username = userdata.getString("username");
+                            user.username = userdata.getString("name");
                             user.email = userdata.getString("email");
                             user.uuid = userdata.getString("uuid");
                             user.createdAt = userdata.getString("created_at");
