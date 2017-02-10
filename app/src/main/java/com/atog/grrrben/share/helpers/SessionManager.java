@@ -6,6 +6,9 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.atog.grrrben.share.classes.User;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -26,6 +29,8 @@ public class SessionManager {
     private Editor editor;
     private Context _context;
 
+    private Gson gson;
+
     // Shared pref mode
     public static int PRIVATE_MODE = 0;
 
@@ -41,15 +46,11 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public void setLogin(User user) {
+    public void setLogin(JSONObject user) {
         // first set a time
         editor.putLong(KEY_DATE_LOGGED_IN, currentTimeMillis());
         // and put the user in
-        try {
-            editor.putString(KEY_USER, ObjectSerializer.serialize(user));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        editor.putString(KEY_USER, user.toString());
         editor.commit();
         Log.d(TAG, "User login session modified!");
     }
@@ -61,12 +62,8 @@ public class SessionManager {
             return null;
         }
 
-        try {
-            String userString = pref.getString(KEY_USER, "");
-            user = (User) ObjectSerializer.deserialize(userString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String userString = pref.getString(KEY_USER, "");
+        user = gson.fromJson(userString, User.class);
 
         return user;
     }
