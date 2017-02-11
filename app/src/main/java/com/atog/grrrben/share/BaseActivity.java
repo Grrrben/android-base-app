@@ -22,9 +22,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
 
+    protected SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        session = new SessionManager(this);
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -57,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
                     case R.id.menu_btn_home:
-                        gotToActivity(new MyStuffActivity());
+                        gotToActivity(new HomeActivity());
                         return true;
                     case R.id.menu_btn_profile:
                         gotToActivity(new ProfileActivity());
@@ -113,7 +118,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void logout() {
-        SessionManager session = new SessionManager(this);
         session.logout();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

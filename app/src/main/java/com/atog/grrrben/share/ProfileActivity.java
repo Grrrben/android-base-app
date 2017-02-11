@@ -10,15 +10,10 @@ import android.widget.TextView;
 
 import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
-import com.atog.grrrben.share.helpers.SessionManager;
 
 public class ProfileActivity extends BaseActivity {
 
-    private TextView txtName;
-    private TextView txtEmail;
-
     private SQLiteHandler db;
-    private SessionManager session;
 
     private static final String TAG = "ProfileActivity";
 
@@ -27,16 +22,15 @@ public class ProfileActivity extends BaseActivity {
         setContentView(R.layout.activity_profile);
         super.onCreate(savedInstanceState);
 
-        session = new SessionManager(this);
-
         if (!session.isLoggedIn()) {
+            Log.d(TAG, "No session found.");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         }
 
-        txtName = (TextView) findViewById(R.id.username);
-        txtEmail = (TextView) findViewById(R.id.email);
+        TextView txtName = (TextView) findViewById(R.id.username);
+        TextView txtEmail = (TextView) findViewById(R.id.email);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -47,12 +41,21 @@ public class ProfileActivity extends BaseActivity {
             }
         });
 
-        session = new SessionManager(this);
         User user = session.getUser();
-        // Displaying the user details on the screen
-        txtName.setText(user.username);
-        txtEmail.setText(user.email);
-        Log.d(TAG, txtName.toString());
+
+        if (user == null) {
+            Log.d(TAG, "User is not logged in...");
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            // Displaying the user details on the screen
+            txtName.setText(user.username);
+            txtEmail.setText(user.email);
+            Log.d(TAG, txtName.toString());
+        }
+
+
     }
 
 }
