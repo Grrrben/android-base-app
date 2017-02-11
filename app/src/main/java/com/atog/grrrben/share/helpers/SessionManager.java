@@ -6,12 +6,17 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.atog.grrrben.share.classes.User;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import static java.lang.System.currentTimeMillis;
 
 public class SessionManager {
+
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
 
@@ -26,8 +31,10 @@ public class SessionManager {
     private Editor editor;
     private Context _context;
 
+    private Gson gson;
+
     // Shared pref mode
-    public static int PRIVATE_MODE = 0;
+    private static int PRIVATE_MODE = 0;
 
     // Shared preferences file username
     private static final String PREF_NAME = "AndrSessionLogin";
@@ -39,52 +46,54 @@ public class SessionManager {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
+        gson = new Gson();
     }
 
-    public void setLogin(User user) {
+    public void setLogin(JSONObject user) {
         // first set a time
         editor.putLong(KEY_DATE_LOGGED_IN, currentTimeMillis());
         // and put the user in
-        try {
-            editor.putString(KEY_USER, ObjectSerializer.serialize(user));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        editor.putString(KEY_USER, user.toString());
+        Log.d(TAG, user.toString());
         editor.commit();
         Log.d(TAG, "User login session modified!");
     }
 
     public User getUser() {
-        User user = null;
-
-        if (isLoggedIn() == false) {
+        if (!isLoggedIn()) {
+            Log.d(TAG, "Not logged in");
+            return null;
+        }
+        String userString = pref.getString(KEY_USER, "");
+        if (userString.equals("")) {
+            Log.d(TAG, "userString empty");
             return null;
         }
 
         try {
-            String userString = pref.getString(KEY_USER, "");
-            user = (User) ObjectSerializer.deserialize(userString);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return gson.fromJson(userString, User.class);
+        } catch (JsonSyntaxException e) {
+            Log.d(TAG, "JsonSyntaxException");
+            Log.d(TAG, e.getMessage());
+            return null;
         }
-
-        return user;
     }
 
     public void logout () {
         editor.putLong(KEY_DATE_LOGGED_IN, 0);
+        editor.putString(KEY_USER, "");
         editor.commit();
     }
 
     public boolean isLoggedIn(){
-
+        // logged in time depends on cacheduration
         long loggedInAt = pref.getLong(KEY_DATE_LOGGED_IN, 0);
         long nowInMs = currentTimeMillis();
-
         int loggedInSeconds = (int)(loggedInAt / 1000);
         int nowInSeconds = (int)(nowInMs / 1000);
-
         int loginValidTill =  loggedInSeconds + cacheduration;
-        return (loginValidTill > nowInSeconds);
+
+        String userString = pref.getString(KEY_USER, "");
+        return (!userString.equals("") && loginValidTill > nowInSeconds);
     }
 }

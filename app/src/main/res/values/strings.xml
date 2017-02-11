@@ -34,7 +34,6 @@
     <string name="drawer_close">Close menu</string>
 
 
-
     <!-- TEMP, remove -->
     <string-array name="drawer_menu_items">
         <item name="home">Home</item>

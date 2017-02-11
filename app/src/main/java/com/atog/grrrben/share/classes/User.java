@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * Just a pojo
- * @todo make parcelable
  */
 public class User implements Serializable {
     public int id;

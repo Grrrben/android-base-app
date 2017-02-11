@@ -42,6 +42,7 @@ import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
 import com.atog.grrrben.share.helpers.SessionManager;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -396,16 +397,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         JSONObject userdata = response.getJSONObject("user");
 
                         if (success) {
-                            // user successfully logged in
-                            User user = new User();
-
-                            user.username = userdata.getString("name");
-                            user.email = userdata.getString("email");
-                            user.uuid = userdata.getString("uuid");
-                            user.createdAt = userdata.getString("created_at");
-
                             // Create login session
-                            session.setLogin(user);
+                            session.setLogin(userdata);
                             // Launch main activity
                             startNextActivity();
                         } else {
