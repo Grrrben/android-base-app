@@ -7,4 +7,5 @@ public class AppConfig {
     public static String URL_LOGIN = "https://talcual.atog.nl/json/user/";
     public static String URL_CONTACTS = "https://talcual.atog.nl/json/contacts/";
     public static String URL_REGISTER = "https://talcual.atog.nl/json/user/register";
+    public static String URL_MESSAGE = "https://talcual.atog.nl/json/random/";
 }

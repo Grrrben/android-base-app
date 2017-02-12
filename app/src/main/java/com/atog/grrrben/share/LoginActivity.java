@@ -375,9 +375,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private JSONObject user;
 
-
         UserLoginTask(LoginActivity context, String email, String password) {
-            Log.d(TAG, "Starting UserLoginTask");
             mContext = context;
             mEmail = email;
             mPassword = password;
