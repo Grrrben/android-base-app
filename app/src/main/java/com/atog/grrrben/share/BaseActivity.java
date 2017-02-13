@@ -6,6 +6,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -238,6 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                 .setSmallIcon(R.drawable.ic_action_add)
                                                 .setContentTitle(notificationTitle)
                                                 .setContentText(notificationBody)
+                                                .setLights(Color.BLUE, 1, 1)
                                                 .setAutoCancel(true);
 
                                 // Creates an explicit intent for an Activity in your app
