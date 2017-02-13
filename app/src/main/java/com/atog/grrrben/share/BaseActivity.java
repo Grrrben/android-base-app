@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
 
@@ -50,7 +49,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected SessionManager session;
 
     protected Timer timer;
-    protected boolean repeat = true;
+    protected boolean repeatedUpdates = true;
 
     private AsyncServerCall asyncServerCall = null;
 
@@ -121,18 +120,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onstop");
-        repeat = true;
-        timedTask(this, 6000);
+        repeatedUpdates = true;
+        timedTask(this, AppConfig.INTERVAL_UPDATE_INACTIVE);
     }
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onresume");
         if (asyncServerCall != null) {
-            asyncServerCall.cancel(false);
+            asyncServerCall.cancel(true);
         }
-        repeat = false;
-
+        repeatedUpdates = false;
     }
 
     @Override
@@ -182,7 +180,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Log.d("TIMER", "timer");
                 asyncServerCall = new AsyncServerCall(fContext);
                 asyncServerCall.execute((Void) null);
-                if (repeat) {
+                if (repeatedUpdates) {
                     timedTask(fContext, millisec);
                 }
             }
