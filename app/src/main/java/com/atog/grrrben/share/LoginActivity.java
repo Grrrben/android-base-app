@@ -48,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -94,19 +95,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                Log.d(TAG, "before check");
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    Log.d(TAG, "before check");
-
                     if (!isNetworkConnected()) {
                         View snackbarView = findViewById(R.id.coordinatorLayout);
-                        Snackbar.make(snackbarView, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        Snackbar.make(snackbarView, R.string.error_no_internet, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
-                        Log.d(TAG, "not connected");
                         return false;
                     }
-
-                    Log.d(TAG, "connected");
                     attemptLogin();
                     return true;
                 }
@@ -118,12 +113,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "before check");
-
                 if (!isNetworkConnected()) {
                     Snackbar.make(view,  R.string.error_no_internet, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                    Log.d(TAG, "not connected");
                 } else {
                     attemptLogin();
                 }
@@ -385,7 +377,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, AppConfig.URL_LOGIN, null, new Response.Listener<JSONObject>() {
+            HashMap<String, String> credentials = new HashMap<String, String>();
+            credentials.put("email", mEmail);
+            credentials.put("password", mPassword);
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    AppConfig.URL_LOGIN,
+                    new JSONObject(credentials),
+                    new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.d(TAG, "Response: " + response.toString());
