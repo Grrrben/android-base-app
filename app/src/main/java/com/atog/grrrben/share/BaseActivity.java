@@ -210,15 +210,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
 
                     private int notificationId;
-                    private AtomicInteger notificationIds;
 
                     private String notificationTitle;
                     private String notificationBody;
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        notificationIds = new AtomicInteger();
-
                         Log.d(TAG, "Response: " + response.toString());
                         try {
                             Boolean success = response.getBoolean("success");
@@ -240,7 +237,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                         new NotificationCompat.Builder(mContext)
                                                 .setSmallIcon(R.drawable.ic_action_add)
                                                 .setContentTitle(notificationTitle)
-                                                .setContentText(notificationBody);
+                                                .setContentText(notificationBody)
+                                                .setAutoCancel(true);
 
                                 // Creates an explicit intent for an Activity in your app
                                 Intent resultIntent = new Intent(mContext, HomeActivity.class);
@@ -265,8 +263,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 NotificationManager mNotificationManager =
                                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-                                // mId allows you to update the notification later on.
-                                notificationId = notificationIds.incrementAndGet();
+                                notificationId = 657532; // same, same, to ensure a single notification
                                 mNotificationManager.notify(notificationId, mBuilder.build());
                             }
                         } catch (JSONException e) {
