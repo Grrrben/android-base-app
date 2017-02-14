@@ -240,7 +240,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(this, email, password);
+            String uuid = session.getUuid();
+            mAuthTask = new UserLoginTask(this, email, password, uuid);
             mAuthTask.execute((Void) null);
         }
     }
@@ -361,18 +362,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private final String uuid;
 
         private LoginActivity mContext;
         private final String TAG = "UserLoginTask";
 
         private JSONObject user;
 
-        UserLoginTask(LoginActivity context, String email, String password) {
+        UserLoginTask(LoginActivity context, String email, String password, String uid) {
             mContext = context;
             mEmail = email;
             mPassword = password;
+            uuid = uid;
         }
-
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -380,6 +382,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             HashMap<String, String> credentials = new HashMap<String, String>();
             credentials.put("email", mEmail);
             credentials.put("password", mPassword);
+            credentials.put("uuid", uuid);
 
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(
                     Request.Method.POST,
@@ -416,10 +419,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Log.d(TAG, error.toString());
                 }
             });
-
             JsonRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
-
-            Log.d(TAG, "returning false");
             return false;
         }
 

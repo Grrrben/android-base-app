@@ -12,6 +12,7 @@ import com.google.gson.JsonSyntaxException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static java.lang.System.currentTimeMillis;
 
@@ -41,6 +42,7 @@ public class SessionManager {
 
     private static final String KEY_DATE_LOGGED_IN = "date_logged_in";
     private static final String KEY_USER = "user";
+    private static final String KEY_UUID = "unique_id";
 
     public SessionManager(Context context) {
         this._context = context;
@@ -77,6 +79,17 @@ public class SessionManager {
             Log.d(TAG, e.getMessage());
             return null;
         }
+    }
+
+    public String getUuid() {
+        String uuid = pref.getString(KEY_UUID, "");
+        if (uuid.equals("")) {
+            Log.d(TAG, "uuid empty");
+            uuid = UUID.randomUUID().toString();
+            editor.putString(KEY_UUID, uuid);
+            editor.commit();
+        }
+        return uuid;
     }
 
     public void logout () {
