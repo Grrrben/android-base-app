@@ -5,9 +5,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-public class MyStuffActivity extends BaseActivity {
+public class ContactsActivity extends BaseActivity {
 
-    private static final String TAG = "ProfileActivity";
+    private static final String TAG = "ContactsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

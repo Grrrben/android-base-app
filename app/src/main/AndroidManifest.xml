@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MyStuffActivity"
+            android:name=".ContactsActivity"
             android:label="@string/title_activity_my_stuff"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".HomeActivity"></activity>
