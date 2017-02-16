@@ -39,7 +39,6 @@ public class SessionManager {
 
     // Shared preferences file username
     private static final String PREF_NAME = "AndrSessionLogin";
-
     private static final String KEY_DATE_LOGGED_IN = "date_logged_in";
     private static final String KEY_USER = "user";
     private static final String KEY_UUID = "unique_id";
