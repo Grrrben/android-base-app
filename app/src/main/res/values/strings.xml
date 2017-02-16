@@ -29,7 +29,7 @@
 
     <!-- menu -->
     <string name="title_activity_profile">Profile</string>
-    <string name="title_activity_my_stuff">My Stuff</string>
+    <string name="title_activity_contacts">Contacts</string>
     <string name="drawer_open">Open menu</string>
     <string name="drawer_close">Close menu</string>
 
