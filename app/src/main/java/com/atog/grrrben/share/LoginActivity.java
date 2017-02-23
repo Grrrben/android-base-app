@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private CoordinatorLayout coordinatorLayout;
 
     private SessionManager session;
-    private SQLiteHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +119,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
         // Session manager
         session = new SessionManager(getApplicationContext());
         // Check if user is already logged in or not

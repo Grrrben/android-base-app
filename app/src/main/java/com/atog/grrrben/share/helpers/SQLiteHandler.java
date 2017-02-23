@@ -9,7 +9,9 @@ import android.util.Log;
 
 import com.atog.grrrben.share.classes.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -70,6 +72,34 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         // Create tables again
         onCreate(db);
+    }
+
+    public List<User> getContacts() {
+        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+        List<User> contacts = new ArrayList<User>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToNext()) {
+                User contact = getContact(cursor);
+                contacts.add(contact);
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return contacts;
+    }
+
+    private User getContact(Cursor cursor) {
+        User user = new User();
+        user.username = cursor.getString(1);
+        user.email = cursor.getString(2);
+        user.uuid = cursor.getString(3);
+        user.group = cursor.getString(4);
+        return user;
     }
 
     /**

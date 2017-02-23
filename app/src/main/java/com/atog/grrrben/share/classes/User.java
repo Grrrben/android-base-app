@@ -11,4 +11,5 @@ public class User implements Serializable {
     public String email;
     public String uuid;
     public String createdAt;
+    public String group;
 }
