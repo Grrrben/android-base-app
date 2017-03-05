@@ -14,9 +14,9 @@
             android:icon="@drawable/ic_action_add"
             android:title="@string/profile"/>
         <item
-            android:id="@+id/menu_btn_stuff"
+            android:id="@+id/menu_btn_contacts"
             android:icon="@drawable/ic_action_add"
-            android:title="@string/stuff"/>
+            android:title="@string/contacts"/>
         <item
             android:id="@+id/menu_btn_search"
             android:icon="@drawable/ic_action_add"

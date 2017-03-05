@@ -19,7 +19,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
@@ -31,7 +31,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Login Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_USER_ID = "user_id";
-    private static final String KEY_GROUP = "group";
+    private static final String KEY_GROUP = "groupname";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_UUID = "uuid";
@@ -44,6 +44,14 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
+        /*
+         * SQLiteOpenHelper onCreate() and onUpgrade() callbacks are invoked when the database is
+         * actually opened, for example by a call to getWritableDatabase().
+         * The database is not opened when the database helper object itself is created.
+         * SQLiteOpenHelper versions the database files. The version number is the int argument
+         * passed to the constructor. (DATABASE_VERSION)
+         * In the database file, the version number is stored in PRAGMA user_version.
+         */
 
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " TEXT,"
@@ -55,8 +63,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_USERNAME + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
-                + KEY_UUID + " TEXT"
-                + KEY_GROUP + " TEXT,"
+                + KEY_UUID + " TEXT,"
+                + KEY_GROUP + " TEXT"
                 + ")";
         db.execSQL(sqlTableContacts);
 
@@ -75,7 +83,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     public List<User> getContacts() {
-        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+        String selectQuery = "SELECT * FROM " + TABLE_CONTACTS;
         List<User> contacts = new ArrayList<User>();
 
         SQLiteDatabase db = this.getReadableDatabase();

@@ -97,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     case R.id.menu_btn_profile:
                         gotToActivity(new ProfileActivity());
                         return true;
-                    case R.id.menu_btn_stuff:
+                    case R.id.menu_btn_contacts:
                         gotToActivity(new ContactsActivity());
                         return true;
                     case R.id.menu_btn_logout:

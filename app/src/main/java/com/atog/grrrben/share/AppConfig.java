@@ -4,9 +4,9 @@ package com.atog.grrrben.share;
  * A place where app-wide settings can be configured.
  */
 class AppConfig {
-    // time settings
+    // time settings in ms
     // Checking for updates when the app is _not_ in the foreground
-    static int INTERVAL_UPDATE_INACTIVE = 6000;
+    static int INTERVAL_UPDATE_INACTIVE = 30000;
 
     // uri for the API endpoints
     static String URL_LOGIN = "https://talcual.atog.nl/json/user/";
