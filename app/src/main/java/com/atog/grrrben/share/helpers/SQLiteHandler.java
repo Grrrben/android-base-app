@@ -9,6 +9,10 @@ import android.util.Log;
 
 import com.atog.grrrben.share.classes.User;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +23,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
@@ -113,15 +117,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Put the contacts in the database. Uses a User object to represent a contact.
      */
-    public void syncContacts(User[] contacts) {
+    public void syncContacts(JSONArray contacts) {
         deleteAllcontacts();
         SQLiteDatabase db = this.getWritableDatabase();
-        for (User contact : contacts) {
+
+        for(int n = 0; n < contacts.length(); n++) {
             ContentValues values = new ContentValues();
-            values.put(KEY_USERNAME, contact.username);
-            values.put(KEY_EMAIL, contact.email);
-            values.put(KEY_UUID, contact.uuid);
-            long id = db.insert(TABLE_USER, null, values);
+
+            try {
+                JSONObject contact = contacts.getJSONObject(n);
+                values.put(KEY_USERNAME, contact.getString("username"));
+                values.put(KEY_EMAIL, contact.getString("email"));
+                values.put(KEY_UUID, contact.getString("uuid"));
+                long id = db.insert(TABLE_USER, null, values);
+
+                Log.d(TAG, "syncContacts: synced: " + contact.getString("username"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         db.close();
     }

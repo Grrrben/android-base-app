@@ -15,6 +15,7 @@ import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,12 +35,14 @@ public class ContactsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_my_stuff);
+        setContentView(R.layout.activity_contacts);
         super.onCreate(savedInstanceState);
 
         db = new SQLiteHandler(getApplicationContext());
         // create the table if not exists
         List<User> contacts = db.getContacts();
+
+        getContacts();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,9 +62,7 @@ public class ContactsActivity extends BaseActivity {
     public class ContactsTask extends AsyncTask<Void, Void, Boolean> {
 
         private ContactsActivity mContext;
-        private final String TAG = "UserLoginTask";
-
-        private JSONObject user;
+        private final String TAG = "ContactsTask";
 
         ContactsTask(ContactsActivity context) {
             mContext = context;
@@ -81,12 +82,15 @@ public class ContactsActivity extends BaseActivity {
 
                             try {
                                 Boolean success = response.getBoolean("success");
-                                JSONObject contacts = response.getJSONObject("contacts");
 
                                 if (success) {
-                                    Log.d(TAG, "success");
+                                    Log.d(TAG, "getting contacts - success");
+                                    JSONArray contacts = response.getJSONArray("contacts");
+                                    // @todo check if a sync is necessary
+                                    db.syncContacts(contacts);
+
                                 } else {
-                                    Log.d(TAG, "not success");
+                                    Log.d(TAG, "getting contacts - nope");
 //                                    Snackbar.make(coordinatorLayout, "NOPE", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
 

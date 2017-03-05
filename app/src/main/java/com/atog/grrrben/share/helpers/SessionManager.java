@@ -43,11 +43,22 @@ public class SessionManager {
     private static final String KEY_USER = "user";
     private static final String KEY_UUID = "unique_id";
 
+    private static final String LAST_UPDATE_CONTACTS = "lastUpdateContacts";
+
     public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
         gson = new Gson();
+    }
+
+    public void setLastUpdateContacts(String dateString){
+        editor.putString(LAST_UPDATE_CONTACTS, dateString);
+        editor.commit();
+    }
+
+    public String getLastUpdateContacts(){
+        return pref.getString(LAST_UPDATE_CONTACTS, "");
     }
 
     public void setLogin(JSONObject user) {
