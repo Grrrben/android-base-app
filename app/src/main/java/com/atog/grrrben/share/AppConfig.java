@@ -6,7 +6,7 @@ package com.atog.grrrben.share;
 class AppConfig {
     // time settings in ms
     // Checking for updates when the app is _not_ in the foreground
-    static int INTERVAL_UPDATE_INACTIVE = 30000;
+    static int INTERVAL_UPDATE_INACTIVE = 120000;
 
     // uri for the API endpoints
     static String URL_LOGIN = "https://talcual.atog.nl/json/user/";

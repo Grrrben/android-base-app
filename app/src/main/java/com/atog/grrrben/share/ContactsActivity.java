@@ -6,12 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.atog.grrrben.share.classes.User;
+import com.atog.grrrben.share.helpers.ContactListAdapter;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
 
@@ -39,10 +41,14 @@ public class ContactsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         db = new SQLiteHandler(getApplicationContext());
-        // create the table if not exists
-        List<User> contacts = db.getContacts();
-
         getContacts();
+
+        // todo https://developer.android.com/guide/topics/ui/layout/listview.html
+        List<User> contacts = db.getContacts();
+        ContactListAdapter contactListAdapter = new ContactListAdapter(ContactsActivity.this, contacts);
+        // Attach the adapter to a ListView
+        ListView contactListView = (ListView) findViewById(R.id.contact_list);
+        contactListView.setAdapter(contactListAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
