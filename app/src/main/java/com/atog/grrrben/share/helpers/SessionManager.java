@@ -52,13 +52,13 @@ public class SessionManager {
         gson = new Gson();
     }
 
-    public void setLastUpdateContacts(String dateString){
-        editor.putString(LAST_UPDATE_CONTACTS, dateString);
+    public void setLastUpdateContacts(long unixtime){
+        editor.putLong(LAST_UPDATE_CONTACTS, unixtime);
         editor.commit();
     }
 
-    public String getLastUpdateContacts(){
-        return pref.getString(LAST_UPDATE_CONTACTS, "");
+    public long getLastUpdateContacts(){
+        return pref.getLong(LAST_UPDATE_CONTACTS, 0);
     }
 
     public void setLogin(JSONObject user) {

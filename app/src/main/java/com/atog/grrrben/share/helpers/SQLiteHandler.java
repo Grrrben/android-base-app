@@ -3,6 +3,7 @@ package com.atog.grrrben.share.helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -23,13 +24,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "android_api";
 
     // Login table user
-    private static final String TABLE_USER = "user"; // depricated
     private static final String TABLE_CONTACTS = "contacts";
 
     // Login Table Columns names
@@ -57,12 +57,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
          * In the database file, the version number is stored in PRAGMA user_version.
          */
 
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_USER + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " TEXT,"
-                + KEY_EMAIL + " TEXT UNIQUE," + KEY_UUID + " TEXT,"
-                + KEY_CREATED_AT + " TEXT" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
-
         String sqlTableContacts = "CREATE TABLE " + TABLE_CONTACTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_USERNAME + " TEXT,"
@@ -79,9 +73,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
-
         // Create tables again
         onCreate(db);
     }
@@ -93,10 +85,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+
         if (cursor.getCount() > 0) {
-            if (cursor.moveToNext()) {
-                User contact = getContact(cursor);
-                contacts.add(contact);
+            if (cursor.moveToFirst()) {
+                do {
+                    User contact = getContact(cursor);
+                    contacts.add(contact);
+                } while (cursor.moveToNext());
             }
         }
         cursor.close();
@@ -105,6 +100,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return contacts;
     }
 
+    /**
+     * Get a User object
+     */
     private User getContact(Cursor cursor) {
         User user = new User();
         user.username = cursor.getString(1);
@@ -117,7 +115,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Put the contacts in the database. Uses a User object to represent a contact.
      */
-    public void syncContacts(JSONArray contacts) {
+    public void syncContacts(JSONArray contacts, String group) {
         deleteAllcontacts();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -129,7 +127,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 values.put(KEY_USERNAME, contact.getString("username"));
                 values.put(KEY_EMAIL, contact.getString("email"));
                 values.put(KEY_UUID, contact.getString("uuid"));
-                long id = db.insert(TABLE_USER, null, values);
+                values.put(KEY_GROUP, group);
+                long id = db.insert(TABLE_CONTACTS, null, values);
 
                 Log.d(TAG, "syncContacts: synced: " + contact.getString("username"));
             } catch (JSONException e) {

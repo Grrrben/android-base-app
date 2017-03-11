@@ -14,8 +14,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.ContactListAdapter;
+import com.atog.grrrben.share.helpers.ISO8601;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
+import com.atog.grrrben.share.helpers.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,10 +42,10 @@ public class ContactsActivity extends BaseActivity {
         setContentView(R.layout.activity_contacts);
         super.onCreate(savedInstanceState);
 
+        // todo https://developer.android.com/guide/topics/ui/layout/listview.html
         db = new SQLiteHandler(getApplicationContext());
         getContacts();
 
-        // todo https://developer.android.com/guide/topics/ui/layout/listview.html
         List<User> contacts = db.getContacts();
         ContactListAdapter contactListAdapter = new ContactListAdapter(ContactsActivity.this, contacts);
         // Attach the adapter to a ListView
@@ -63,6 +65,9 @@ public class ContactsActivity extends BaseActivity {
     private void getContacts(){
         mContactsTask = new ContactsTask(this);
         mContactsTask.execute((Void) null);
+
+        long unixtime = System.currentTimeMillis() / 1000L;
+        session.setLastUpdateContacts(unixtime);
     }
 
     public class ContactsTask extends AsyncTask<Void, Void, Boolean> {
@@ -92,8 +97,9 @@ public class ContactsActivity extends BaseActivity {
                                 if (success) {
                                     Log.d(TAG, "getting contacts - success");
                                     JSONArray contacts = response.getJSONArray("contacts");
+                                    String group = response.getString("group");
                                     // @todo check if a sync is necessary
-                                    db.syncContacts(contacts);
+                                    db.syncContacts(contacts, group);
 
                                 } else {
                                     Log.d(TAG, "getting contacts - nope");
