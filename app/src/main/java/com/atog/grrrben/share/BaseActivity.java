@@ -1,5 +1,6 @@
 package com.atog.grrrben.share;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -100,6 +101,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     case R.id.menu_btn_contacts:
                         gotToActivity(new ContactsActivity());
                         return true;
+                    case R.id.menu_btn_settings:
+                        gotToActivity(new SettingsActivity());
+                        return true;
                     case R.id.menu_btn_logout:
                         logout();
                         return true;
@@ -157,7 +161,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void gotToActivity(AppCompatActivity activity) {
+    public void gotToActivity(Activity activity) {
         Intent intent = new Intent(this, activity.getClass());
         startActivity(intent);
         finish();

@@ -63,11 +63,17 @@ public class ContactsActivity extends BaseActivity {
     }
 
     private void getContacts(){
-        mContactsTask = new ContactsTask(this);
-        mContactsTask.execute((Void) null);
 
-        long unixtime = System.currentTimeMillis() / 1000L;
-        session.setLastUpdateContacts(unixtime);
+        long halfHour = 30 * 60;
+        long unixtimeNow = System.currentTimeMillis() / 1000L;
+
+        if (session.getLastUpdateContacts() < unixtimeNow - halfHour) {
+            mContactsTask = new ContactsTask(this);
+            mContactsTask.execute((Void) null);
+            session.setLastUpdateContacts(unixtimeNow);
+        }
+
+
     }
 
     public class ContactsTask extends AsyncTask<Void, Void, Boolean> {
