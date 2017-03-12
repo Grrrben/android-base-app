@@ -1,7 +1,9 @@
 package com.atog.grrrben.share;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -44,9 +46,11 @@ public class ContactsActivity extends BaseActivity {
 
         // todo https://developer.android.com/guide/topics/ui/layout/listview.html
         db = new SQLiteHandler(getApplicationContext());
-        getContacts();
 
         List<User> contacts = db.getContacts();
+
+        getContacts();
+
         ContactListAdapter contactListAdapter = new ContactListAdapter(ContactsActivity.this, contacts);
         // Attach the adapter to a ListView
         ListView contactListView = (ListView) findViewById(R.id.contact_list);
@@ -62,18 +66,21 @@ public class ContactsActivity extends BaseActivity {
         });
     }
 
-    private void getContacts(){
+    private void getContacts() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        int syncConnPref = Integer.parseInt(sharedPref.getString("sync_frequency", "-1"));
 
-        long halfHour = 30 * 60;
-        long unixtimeNow = System.currentTimeMillis() / 1000L;
+        if (syncConnPref != -1) {
+            long syncSeconds = syncConnPref * 60;
+            long unixtimeNow = System.currentTimeMillis() / 1000L;
 
-        if (session.getLastUpdateContacts() < unixtimeNow - halfHour) {
-            mContactsTask = new ContactsTask(this);
-            mContactsTask.execute((Void) null);
-            session.setLastUpdateContacts(unixtimeNow);
+            // todo buggy?!
+            if (session.getLastUpdateContacts() < unixtimeNow - syncSeconds) {
+                mContactsTask = new ContactsTask(this);
+                mContactsTask.execute((Void) null);
+                session.setLastUpdateContacts(unixtimeNow);
+            }
         }
-
-
     }
 
     public class ContactsTask extends AsyncTask<Void, Void, Boolean> {
