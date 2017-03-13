@@ -18,6 +18,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textSize">@dimen/text_medium</item>
+        <item name="android:layout_margin">@dimen/list_item_margin</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

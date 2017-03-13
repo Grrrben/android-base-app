@@ -123,14 +123,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onstop");
         repeatedUpdates = true;
         timedTask(this, AppConfig.INTERVAL_UPDATE_INACTIVE);
     }
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onresume");
         if (asyncServerCall != null) {
             asyncServerCall.cancel(true);
         }
@@ -176,12 +174,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void timedTask(BaseActivity context, int ms) {
 
-        final int millisec = ms;
+        final Integer millisec = ms;
         final BaseActivity fContext = context;
 
         timer.schedule(new TimerTask() {
             public void run() {
-                Log.d("TIMER", "timer");
+                Log.d("TIMER", "timer (set to" + Integer.toString(millisec) + " milliseconds)");
                 asyncServerCall = new AsyncServerCall(fContext);
                 asyncServerCall.execute((Void) null);
                 if (repeatedUpdates) {

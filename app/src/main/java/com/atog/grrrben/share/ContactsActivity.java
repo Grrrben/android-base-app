@@ -73,9 +73,10 @@ public class ContactsActivity extends BaseActivity {
         if (syncConnPref != -1) {
             long syncSeconds = syncConnPref * 60;
             long unixtimeNow = System.currentTimeMillis() / 1000L;
+            long unixTimeUpdateNeeded = (unixtimeNow - syncSeconds);
 
             // todo buggy?!
-            if (session.getLastUpdateContacts() < unixtimeNow - syncSeconds) {
+            if (session.getLastUpdateContacts() < unixTimeUpdateNeeded) {
                 mContactsTask = new ContactsTask(this);
                 mContactsTask.execute((Void) null);
                 session.setLastUpdateContacts(unixtimeNow);
