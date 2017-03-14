@@ -137,14 +137,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // todo
-        // http://stackoverflow.com/questions/26564400/creating-a-preference-screen-with-support-v21-toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_drawer);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        if (toolbar != null) {
+//            setSupportActionBar(toolbar);
+//            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_drawer);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        }
     }
 
     @Override
