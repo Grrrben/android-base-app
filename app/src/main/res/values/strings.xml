@@ -36,6 +36,7 @@
 
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_home">Home</string>
 
     <!-- Strings related to Settings -->
 

@@ -145,7 +145,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_drawer);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
     }
 
     @Override
