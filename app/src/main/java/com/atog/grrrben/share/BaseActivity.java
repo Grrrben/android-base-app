@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -133,6 +134,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             asyncServerCall.cancel(true);
         }
         repeatedUpdates = false;
+    }
+
+    /**
+     * Check if there is an internet connection
+     * @return boolean
+     */
+    protected boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     @Override

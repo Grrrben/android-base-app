@@ -84,11 +84,22 @@ public class ContactsActivity extends BaseActivity {
             long lastUpdate = session.getLastUpdateContacts();
 
             if (lastUpdate < unixTimeUpdateNeeded) {
-                Log.d(TAG, "Update because " + Long.toString(unixtimeNow) + " is smaller than " + Long.toString(unixTimeUpdateNeeded));
-                mContactsTask = new ContactsTask(this);
-                mContactsTask.execute((Void) null);
-                session.setLastUpdateContacts(unixtimeNow);
-                return true;
+
+                if (isNetworkConnected()) {
+                    Log.d(TAG, "Update because " + Long.toString(unixtimeNow) + " is smaller than " + Long.toString(unixTimeUpdateNeeded));
+                    mContactsTask = new ContactsTask(this);
+                    mContactsTask.execute((Void) null);
+                    session.setLastUpdateContacts(unixtimeNow);
+                    return true;
+                } else {
+                    // todo check if not buggy
+                    View snackbarView = findViewById(R.id.drawer_layout);
+                    if (snackbarView != null) {
+                        Snackbar.make(snackbarView, R.string.error_no_internet, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                }
+
             }
             Log.d(TAG, "No update of contacts. ( " + Long.toString(unixtimeNow) + " > " + Long.toString(unixTimeUpdateNeeded) + ")");
         }
@@ -160,12 +171,22 @@ public class ContactsActivity extends BaseActivity {
                                     db.syncContacts(contacts, group);
                                 } else {
                                     Log.d(TAG, "getting contacts - nope");
-//                                    Snackbar.make(coordinatorLayout, "NOPE", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                    View snackbarView = findViewById(R.id.drawer_layout);
+                                    if (snackbarView != null) {
+                                        Snackbar.make(snackbarView, "NOPE", Snackbar.LENGTH_LONG)
+                                                .setAction("Action", null)
+                                                .show();
+                                    }
                                 }
 
                             } catch (JSONException e) {
                                 Log.d(TAG, "Error: " + e.toString());
-//                                Snackbar.make(coordinatorLayout, "NOPE...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                View snackbarView = findViewById(R.id.drawer_layout);
+                                if (snackbarView != null) {
+                                    Snackbar.make(snackbarView, "NOPE...", Snackbar.LENGTH_LONG)
+                                            .setAction("Action", null)
+                                            .show();
+                                }
                             }
                         }
                     }, new Response.ErrorListener() {
