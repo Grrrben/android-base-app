@@ -1,7 +1,11 @@
 package com.atog.grrrben.share;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -16,19 +20,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.atog.grrrben.share.classes.User;
 import com.atog.grrrben.share.helpers.ContactListAdapter;
-import com.atog.grrrben.share.helpers.ISO8601;
 import com.atog.grrrben.share.helpers.JsonRequestQueue;
 import com.atog.grrrben.share.helpers.SQLiteHandler;
-import com.atog.grrrben.share.helpers.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
-
-import static com.atog.grrrben.share.R.id.coordinatorLayout;
 
 public class ContactsActivity extends BaseActivity {
 
@@ -38,23 +37,19 @@ public class ContactsActivity extends BaseActivity {
 
     private ContactsTask mContactsTask = null;
 
+    private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_contacts);
         super.onCreate(savedInstanceState);
 
-        // todo https://developer.android.com/guide/topics/ui/layout/listview.html
-        db = new SQLiteHandler(getApplicationContext());
+        mProgressView = findViewById(R.id.progress_bar);
 
-        List<User> contacts = db.getContacts();
-
-        getContacts();
-
-        ContactListAdapter contactListAdapter = new ContactListAdapter(ContactsActivity.this, contacts);
-        // Attach the adapter to a ListView
-        ListView contactListView = (ListView) findViewById(R.id.contact_list);
-        contactListView.setAdapter(contactListAdapter);
+        boolean update = getContacts();
+        if (!update) {
+            contactsToListView();
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,22 +61,71 @@ public class ContactsActivity extends BaseActivity {
         });
     }
 
-    private void getContacts() {
+    private void contactsToListView(){
+        List<User> contacts = getDatabase().getContacts();
+        ContactListAdapter contactListAdapter = new ContactListAdapter(ContactsActivity.this, contacts);
+        // Attach the adapter to a ListView
+        ListView contactListView = (ListView) findViewById(R.id.contact_list);
+        contactListView.setAdapter(contactListAdapter);
+    }
+
+    /**
+     * Async fetching of contacts
+     * @return boolean, true if an update will be done.
+     */
+    private boolean getContacts() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int syncConnPref = Integer.parseInt(sharedPref.getString("sync_frequency", "-1"));
 
         if (syncConnPref != -1) {
-            long syncSeconds = syncConnPref * 60;
+            int syncSeconds = syncConnPref * 60;
             long unixtimeNow = System.currentTimeMillis() / 1000L;
             long unixTimeUpdateNeeded = (unixtimeNow - syncSeconds);
+            long lastUpdate = session.getLastUpdateContacts();
 
-            // todo buggy?!
-            if (session.getLastUpdateContacts() < unixTimeUpdateNeeded) {
+            if (lastUpdate < unixTimeUpdateNeeded) {
+                Log.d(TAG, "Update because " + Long.toString(unixtimeNow) + " is smaller than " + Long.toString(unixTimeUpdateNeeded));
                 mContactsTask = new ContactsTask(this);
                 mContactsTask.execute((Void) null);
                 session.setLastUpdateContacts(unixtimeNow);
+                return true;
             }
+            Log.d(TAG, "No update of contacts. ( " + Long.toString(unixtimeNow) + " > " + Long.toString(unixTimeUpdateNeeded) + ")");
         }
+        return false;
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private SQLiteHandler getDatabase(){
+        if (null == db) {
+            db = new SQLiteHandler(getApplicationContext());
+        }
+        return db;
     }
 
     public class ContactsTask extends AsyncTask<Void, Void, Boolean> {
@@ -91,6 +135,7 @@ public class ContactsActivity extends BaseActivity {
 
         ContactsTask(ContactsActivity context) {
             mContext = context;
+            showProgress(true);
         }
 
         @Override
@@ -112,9 +157,7 @@ public class ContactsActivity extends BaseActivity {
                                     Log.d(TAG, "getting contacts - success");
                                     JSONArray contacts = response.getJSONArray("contacts");
                                     String group = response.getString("group");
-                                    // @todo check if a sync is necessary
                                     db.syncContacts(contacts, group);
-
                                 } else {
                                     Log.d(TAG, "getting contacts - nope");
 //                                    Snackbar.make(coordinatorLayout, "NOPE", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -140,14 +183,15 @@ public class ContactsActivity extends BaseActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mContactsTask = null;
-//            showProgress(false);
+            contactsToListView();
+            showProgress(false);
             Log.d(TAG, "success: " + success.toString());
         }
 
         @Override
         protected void onCancelled() {
             mContactsTask = null;
-//            showProgress(false);
+            showProgress(false);
         }
     }
 }
