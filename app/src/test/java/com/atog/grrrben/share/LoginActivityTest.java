@@ -16,11 +16,15 @@ public class LoginActivityTest {
     @Test
     public void isEmailValid() throws Exception {
         assertThat(la.isEmailValid("name@email.com"), is(true));
+        assertThat(la.isEmailValid("@nohandle.com"), is(false));
+        assertThat(la.isEmailValid("nodomain@"), is(false));
+        assertThat(la.isEmailValid("name@nodotcom"), is(false));
     }
 
     @Test
     public void isPasswordValid() throws Exception {
-        assertThat(la.isPasswordValid("12345678"), is(true));
+        assertThat(la.isPasswordValid("longenough"), is(true));
+        assertThat(la.isPasswordValid("short"), is(false));
     }
 
     @Test

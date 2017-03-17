@@ -50,6 +50,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static com.atog.grrrben.share.R.id.login_form;
@@ -191,13 +193,12 @@ public class LoginActivity extends AppCompatActivity
     }
 
     protected boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        Matcher matcher = AppConfig.VALID_EMAIL_ADDRESS_REGEX .matcher(email);
+        return matcher.find();
     }
 
     protected boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**
