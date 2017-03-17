@@ -190,12 +190,12 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private boolean isEmailValid(String email) {
+    protected boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
+    protected boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
@@ -236,7 +236,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    public void startNextActivity() {
+    protected void startNextActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
         finish();
@@ -267,7 +267,7 @@ public class LoginActivity extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... params) {
 
-            HashMap<String, String> credentials = new HashMap<String, String>();
+            HashMap<String, String> credentials = new HashMap<>();
             credentials.put("email", mEmail);
             credentials.put("password", mPassword);
             credentials.put("uuid", uuid);
